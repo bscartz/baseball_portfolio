@@ -10,7 +10,7 @@ https://rpubs.com/bscartz/lemahieu-fastball-types
 
 Question: What types of RH fastballs are most effective against DJ LeMahieu?
 
-This project simulates a common task for baseball analysts. DJ LeMahieu was chosen at random. The code collects data for FBs that LeMahieu faced in 2021 and 2022, and it divides them into types based on horizontal and vertical movement profiles. It evaluates and compares LeMahieu's performance against each type. It concludes that LeMahieu struggles the most against low VB, high HB fastballs, which means that pitchers with high sinker usages would be most effective against him. This code could be used for any player, and it could be applied to bullpen matchup optimization strategies. 
+This project simulates a common task for baseball analysts. DJ LeMahieu was chosen at random. The code collects data for FBs that LeMahieu faced in 2021 and 2022, and it divides them into types based on horizontal and vertical movement profiles. It evaluates and compares LeMahieu's performance against each type. It concludes that LeMahieu struggles the most against low VB, high HB fastballs, which means that pitchers with high sinker usages would be most effective against him. This code could be used for any player, and it could be applied to bullpen matchup optimization strategies. It could also be used to make lineup decisions based on the fastball profile of the opponent's starting pitcher.
 
 
 
