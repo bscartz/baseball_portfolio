@@ -7,4 +7,5 @@ This code uses the baseballr package's statcast_search() function. The function 
 
 ## Project 2: LeMahieu Fastball Types
 
-file:///G:/My%20Drive/Baseball/Summer%202023/R%20Codes%20and%20Data/DJ%20LeMahieu%20Project/LeMahieu-Markdown.html
+https://rpubs.com/bscartz/lemahieu-fastball-types
+
