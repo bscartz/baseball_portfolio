@@ -4,6 +4,8 @@ This is a collection of baseball projects with the objectives of learning, pract
 ## Mini Project 1: Statcast
 https://rpubs.com/bscartz/statcast
 
+Task: Create a season’s worth of Statcast data stored as a single table for analysis
+
 This code uses the baseballr package's statcast_search() function. The function on its own returns pitch-by-pitch metrics from a given date range, but it cannot handle the payload of an entire season's worth of data. Therefore, this code loops the function through every day in a given season. The resulting data tables from this code allow for a wide span of analyses.
 
 ## Mini Project 2: Pitcher Comps
