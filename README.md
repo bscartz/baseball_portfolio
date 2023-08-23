@@ -2,17 +2,31 @@
 This is a collection of baseball projects with the objectives of learning, practicing, and demonstrating code. Each project is described below and corresponds to a file above. The links below the titles attach R Markdown html files which display executed code and visualizations. 
 
 ## Mini Project 1: Statcast
+https://rpubs.com/bscartz/statcast
 
 This code uses the baseballr package's statcast_search() function. The function on its own returns pitch-by-pitch metrics from a given date range, but it cannot handle the payload of an entire season's worth of data. Therefore, this code loops the function through every day in a given season. The resulting data tables from this code allow for a wide span of analyses.
 
-## Mini Project 2: LeMahieu Fastball Types
+## Mini Project 2: Pitcher Comps
+https://rpubs.com/bscartz/pitcher-comps
+
+Task: Create a system to match pitchers with other pitchers around the league who most closely resemble their arsenals and characteristics.
+
+This project evaluates pitchers' usage rates and pitch characteristics. Given a subject, it identifies pitchers around the league who have the most similar characteristics. This allows staff to find useful bases for comparison, which can be applied to player development, advance scouting, and pro scouting evaluation. This project uses Freddy Peralta as the subject and identifies Triston McKenzie and Simeon Woods Richardson as useful comps. If it were framed for all three players as subjects, the following are examples of applications.
+
+Peralta: Observe how McKenzie approaches certain hitters. With what pitches and sequences has McKenzie found success against Peralta’s upcoming opponents? In McKenzie’s dominant 2022 season, on what pitches and sequences did he rely most?
+
+McKenzie: Unlike McKenzie, Peralta features a CH. What does this add to his arsenal, and should McKenzie explore adding a similar pitch?
+
+Woods Richardson: For a young prospect, these comparisons to big leaguers can be especially valuable. Woods Richarson should follow these pitchers closely, particularly Peralta, to mimic aspects of their approach and development.
+
+## Mini Project 3: LeMahieu Fastball Types
 https://rpubs.com/bscartz/lemahieu-fastball-types
 
 Question: What types of RH fastballs are most effective against DJ LeMahieu?
 
 This project simulates a common task for baseball analysts. DJ LeMahieu was chosen at random. The code collects data for FBs that LeMahieu faced in 2021 and 2022, and it divides them into types based on horizontal and vertical movement profiles. It evaluates and compares LeMahieu's performance against each type. It concludes that LeMahieu struggles the most against low VB, high HB fastballs, which means that pitchers with high sinker usages would be most effective against him. This code could be used for any player, and it could be applied to bullpen matchup optimization strategies. It could also be used to make lineup decisions based on the fastball profile of the opponent's starting pitcher.
 
-## Mini Project 3: Top 100 Prospects Re-rank
+## Mini Project 4: Top 100 Prospects Re-rank
 https://rpubs.com/bscartz/top-100-prospects-re-rank
 
 Task: Re-rank the 2019 Fangraphs Top 100 prospects based on MLB production. Then, evaluate the accuracy of the original rankings.
