@@ -1,5 +1,5 @@
 # baseball_portfolio Ben Scartz
-This is a collection of baseball projects with the objectives of learning, practicing, and demonstrating code. Each project is described below and corresponds to a file above. The links below the titles attach R Markdown html files which display executed code and visualizations. 
+This is a collection of baseball projects with the objectives of learning, practicing, and demonstrating code. Several are meant to simulate ad hoc projects conducted by analysts. Each project is described below and corresponds to a file above. The links below the titles attach R Markdown html files which display executed code and visualizations. 
 
 ## Mini Project 1: Statcast
 https://rpubs.com/bscartz/statcast
