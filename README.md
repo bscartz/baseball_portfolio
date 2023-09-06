@@ -35,3 +35,11 @@ Task: Re-rank the 2019 Fangraphs Top 100 prospects based on MLB production. Then
 
 This project can be used in hindsight to evaluate the performance of internal scouting operations. It can also be used to give context to the value of rankings. For example, By how much should a top 10 prospect be valued above a top 50 prospect? The project simulates this using the Fangraphs prospect rankings. It concludes that the prospect rankings provide some, but not an overwhelming indication of a player's future production. Therefore, a player ranked in the lower parts of the top 100 should be valued approximately as highly as one in the upper parts. This is especially true for pitchers and catchers. These insights can be used in trade and acquisition strategies.
 
+## Mini Project 5: Top 5 Starting Pitchers in Baseball
+https://rpubs.com/bscartz/top-5-pitchers
+
+Question: Who are the five best starting pitchers in Major League Baseball right now (ignore contract status, age, etc)?
+
+This project begins with a brief statistical analysis over the last two seasons to pick ten candidates. It then summarizes a video scouting evaluation to determine the final order. The statistical analysis highlights xwOBA-against, K%, and BB%. The scouting analysis steps away from the metrics; it grades pitches on a 20-80 scale and comments on approach, sequencing, and other qualitative factors. 
+
+
