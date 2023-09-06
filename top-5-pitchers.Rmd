@@ -1,0 +1,310 @@
+---
+title: "Top 5 Pitchers in Baseball"
+author: "Ben Scartz"
+date: "2023-09-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question: 
+
+### Who are the five best starting pitchers in Major League Baseball right now (ignore contract status, age, etc)?
+
+This project begins with a brief statistical analysis over the last two seasons to pick ten candidates. It then summarizes a video scouting evaluation to determine the final order, which can be found at the bottom of the page. 
+
+```{r}
+
+library(dplyr)
+library(baseballr)
+
+# load season data. Use 2022 and 2023 (through present date)
+load("G:/My Drive/Baseball/Summer 2023/R Projects/Data/Statcast2022.RData")
+load("G:/My Drive/Baseball/Summer 2023/R Projects/Data/Statcast2023.RData")
+
+Statcast2223 <- rbind(Statcast2022, Statcast2023)
+
+```
+
+### Create a table to display the statistical leaders over the given time period. The areas of interest are xwOBA-against (wOBA-against for context), K%, and BB%. These metrics eliminate nearly all factors outside of a pitcher's control. They give the truest indication of his performance by eliminating the noise associated with common-place statistics like ERA and W-L.
+
+```{r}
+
+# Get unique values from the 'pitcher' column of Statcast2223
+unique_playerID <- unique(Statcast2223$pitcher)
+
+# Create empty data frame for pitchers2223
+pitchers2223 <- data.frame()
+
+# Define label vectors and counts
+
+hits_vector <- c('single', 'double', 'triple', 'home_run')
+at_bats_vector <- c('field_out', 'strikeout', 'grounded_into_double_play', 
+                    'fielders_choice', 'fielders_choice_out', 'triple_play', 
+                    'strikeout_double_play', 'double_play', 'field_error', '
+                    force_out', hits_vector)
+plate_appearances_vector <- c(at_bats_vector, 'sac_fly', 'walk', 'hit_by_pitch', 
+                              'sac_bunt', 'sac_bunt_double_play', 
+                              'sac_fly_double_play', 'catcher_interf')
+
+# Loop through each unique player ID
+
+for (player_id in unique_playerID) {
+  
+  # Filter Statcast2223 data for the current player ID and game_type == 'R'
+  filtered_data <- Statcast2223 %>%
+    filter(pitcher == player_id & game_type == 'R')
+  
+  # Define count labels
+  walk_count <- sum(filtered_data$events == 'walk')
+  strikeout_count <- sum(filtered_data$events == 'strikeout')
+  hit_by_pitch_count <- sum(filtered_data$events == 'hit_by_pitch')
+  pitch_count <- nrow(filtered_data)
+  edge_count <- sum(filtered_data$edge, na.rm = TRUE)
+  
+  # Calculate desired metrics
+  # Calculate batters faced (bf)
+  pa <- sum(filtered_data$events %in% plate_appearances_vector)
+  
+  # Calculate xwOBA against
+  xwoba_sum <- sum(filtered_data$estimated_woba_using_speedangle, na.rm = TRUE) +
+                0.7 * (walk_count + hit_by_pitch_count)
+  woba_denominator <- sum(filtered_data$events %in% at_bats_vector) +
+    walk_count +
+    hit_by_pitch_count +
+    sum(filtered_data$events == 'sac_fly')
+  xwoba <- xwoba_sum / woba_denominator
+  
+  # Calculate wOBA against
+  woba_sum <- sum(filtered_data$woba_value, na.rm = TRUE)
+  woba <- woba_sum / woba_denominator
+  
+  # Calculate K%
+  strikeout_rate <- strikeout_count / pa
+
+  # Calculate BB%
+  walk_rate <- walk_count / (pa - hit_by_pitch_count)
+
+  # Create a row for the current player in pitchers222323
+  new_row <- data.frame(player_id = player_id, 
+                        bf = pa,
+                        xwoba = xwoba,
+                        woba = woba,
+                        k = strikeout_rate,
+                        bb = walk_rate,
+                        stringsAsFactors = FALSE)
+  
+  # Append the new row to pitchers2223 data frame
+  pitchers2223 <- rbind(pitchers2223, new_row)
+}
+
+# Filter to only include BF >= 894 (3 per team game over selected time period)
+
+pitchers2223 <- filter(pitchers2223, bf >= 894)
+
+# Create player info table and join 
+  
+mlb_stats23 <- mlb_stats(stat_type = 'season', player_pool = 'All', stat_group = 'pitching', 
+                           season = 2023)
+
+player_info23 <- mlb_stats23 %>%
+  select(player_id, player_first_name, 
+         player_last_name,
+         team_name)
+
+pitchers2223 <- pitchers2223 %>%
+  left_join(player_info23, by = 'player_id') %>%
+  select(player_id, player_first_name, player_last_name,
+         team_name, everything())
+
+pitchers2223 <- pitchers2223 %>%
+  rename(first = player_first_name,
+         last = player_last_name,
+         team = team_name)
+
+head(pitchers2223, 10)
+
+```
+
+```{r}
+
+# Add ranking columns
+
+pitchers2223_ranked <- pitchers2223 %>%
+  mutate(xwoba_r = rank(xwoba),
+         woba_r = rank(woba),
+         k_r = rank(desc(k)),
+         bb_r = rank(bb))
+
+head(pitchers2223_ranked, 10)
+
+```
+
+### View the top performers in each statistic and select top 10 for further consideration.
+
+```{r}
+
+xwoba_table <- pitchers2223_ranked %>%
+  select(first, last, team, xwoba, woba, xwoba_r) %>%
+  arrange(xwoba)
+
+head(xwoba_table, 10)
+
+```
+
+```{r}
+
+k_table <- pitchers2223_ranked %>%
+  select(first, last, team, k, k_r) %>%
+  arrange(desc(k))
+
+head(k_table, 10)
+
+```
+
+```{r}
+
+bb_table <- pitchers2223_ranked %>%
+  select(first, last, team, bb, bb_r) %>%
+  arrange(bb)
+
+head(bb_table, 10)
+
+```
+
+#### 10 pitchers for consideration:
+
+* Spencer Strider, RHP, ATL
+* Max Scherzer, RHP, TEX
+* Shohei Ohtani, RHP, LAA
+* Freddy Peralta, RHP, MIL
+* Blake Snell, LHP, TB
+* Dylan Cease, RHP, CWS
+* Max Fried, LHP, ATL
+* Hunter Greene, RHP, CIN
+* Corbin Burnes, RHP, MIL
+
+
+The remaining evaluation is based on video scouting. Full-start videos accessed via https://www.youtube.com/@DawgHen0
+
+
+#### Spencer Strider, ATL
+
+Pitch Grades
+
+FB: 80   SL: 70
+
+Report Summary
+
+Strider has arguably the best FB in baseball. His above-average extension and release point give him a uniquely-low approach angle, which adds deception and perceived velocity. The plus SL creates a very effective tunnel at the bottom of the zone. His FB characteristics allow him to miss bats, even when command lacks. He can dominate most hitters with simply middle/middle FBs. 
+
+
+#### Max Scherzer, TEX
+
+Pitch Grades
+
+FB: 70   SL: 70   CB: 70   CH: 65   CT: 60
+
+Report Summary
+
+Scherzer is very effective pitching to the edges of the zone, working through FB-SL and FB-CH combos. CB and CT become more prevalent in subsequent trips through the batting order, which allows him to dominate deep into games. 
+
+#### Shohei Ohtani, LAA
+
+Pitch Grades
+
+FB: 80   SI: 80   SL: 70   SP: 60   CB: 55
+
+Report Summary
+
+Ohtani has elite 100+ velocity, but he utilizes a heavy-SL approach to slow down hitters' eyes, pitching backwards to FB/SI for putout. He changes eye levels effectively, giving him the ability to get chases down on SL and CB. He hides the ball well through his stride, increasing deceptiveness.
+
+#### Freddy Peralta, MIL
+
+Pitch Grades
+
+FB: 60   SL: 70   CB: 55   CH: 55
+
+Report Summary
+
+Peralta has a great four-pitch mix, with plenty of effective sequencing options. He consistently lives down in the zone, elevating for Ks. He is capable of leading with the CB at times, and CB-SL is a great combo, as they take similar shapes with a 6-7mph difference. He does a great job of controlling ABs and keeping hitters off-balance.
+
+#### Blake Snell, TB
+
+Pitch Grades
+
+FB: 70   SL: 70   CB: 55   CH: 55
+
+Report Summary
+
+Snell creates a big downward angle from release, which makes his FB and SL look very similar out of the hand. He pitches to the edges and just off of the plate, living with the occasional walk, but this allows him to utilize his best combos (FB-SL and CH-SL) for chases. 
+
+#### Dylan Cease, CWS
+
+Pitch Grades
+
+FB: 70   SL: 60   CB: 70
+
+Cease lives at the top of the zone with high plus velocity, and he works the SL off of that plane. The CB could be his best pitch if it were more consistent, featuring elite spin and dive. His quick arm action hides the ball well. His offering can get a little thin when he cannot command the CB for strikes.
+
+#### Max Fried, ATL
+
+Pitch Grades
+
+FB: 60   CB: 80   CH: 55   SI: 55   SL: 55
+
+Report Summary
+
+Fried has one of the deepest arsenals in baseball, with five above-average pitches with >10% usage. The big CB is his calling card, and it allows him to move up and down in the zone with command. He has one of the lowest walk rates in the league, and he does so while staying out of the middle of the zone. 
+
+#### Hunter Greene, CIN
+
+Pitch Grades
+
+FB: 80   SL: 70   CH: 60
+
+Report Summary
+
+The 100+ FB locates and plays well to all parts of the plate. This gives him effective "combos" by simply moving the FB around the zone. This is his primary approach in first trips through the order. In subsequent trips, he features the tight-spin SL, which prevents hitters from sitting and timing his FB. Offspeed command can be inconsistent at times, but when it clicks, he can put up strikeout numbers near the top of the league.
+
+#### Corbin Burnes, MIL
+
+Pitch Grades
+
+CT: 80   CB: 55   CH: 70   SI: 55   SL: 60
+
+Report Summary
+
+Burnes has an elite CT that functions as his primary fastball. He moves it in and out very well, starting at the edges and inducing chases and takes for strikes. The similarly-shaped SL creates a strong combo, and it comes out later in outings. The SI, though rare, gives him a second velocity offering that hitters never expect. 
+
+
+# Final Rankings
+
+#### 1. Spencer Strider
+#### 2. Shohei Ohtani
+#### 3. Max Scherzer
+#### 4. Blake Snell
+#### 5. Corbin Burnes
+
+6. Max Fried
+7. Dylan Cease
+8. Freddy Peralta
+9. Hunter Greene
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
