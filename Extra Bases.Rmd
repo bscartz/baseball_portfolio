@@ -1,0 +1,122 @@
+---
+title: "Extra Bases"
+output: html_document
+date: "2023-11-09"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question:
+### Identify players who are the most aggressive and successful baserunners out of the batters box.
+
+```{r warning=FALSE}
+library(mgcv)
+library(tidyverse)
+library(forecast)
+
+load("G:/My Drive/Baseball/R Projects/Data/Statcast2023.RData")
+```
+
+
+```{r warning=FALSE}
+
+# Create data of balls in play
+hip <- c('single', 'double', 'triple')
+
+hip_data <- Statcast2023 %>%
+  filter(events %in% hip) %>%
+  mutate(base = if_else(events == 'single', 1,
+                           if_else(events == 'double', 2,
+                                   if_else(events == 'triple', 3,
+                                           NA)))) %>%
+  select(player_name, events, bb_type, hc_x, hc_y, launch_angle, launch_speed, 
+           base)
+
+# Partition into training and validation data
+RNGkind(sample.kind = 'Rounding')
+set.seed(42)
+train_rows <- sample(1:dim(hip_data)[1], dim(hip_data)[1]*0.8)
+train_data <- hip_data[train_rows,]  
+valid_data <- hip_data[-train_rows,]
+```
+
+### Create general additive model
+
+GAM models non-linear relationships between related variables. This model creates a "predicted bases" metric based on the chosen variables. It is most similar to an xSLG calculation, but it only considers hits in play. In this way, it focuses on baserunning.
+
+launch_speed: exit velocity
+hc_x & hc_y: hit coordinates
+
+```{r}
+model <- gam(base ~ s(launch_speed, launch_angle, hc_x, hc_y),
+             data = train_data)
+summary(model)
+```
+
+```{r}
+# Predict on validation data
+predictions <- as.vector(predict(model, newdata = valid_data, na.action = na.pass))
+
+pred_dat <- cbind.data.frame(valid_data$player_name, predictions, valid_data$base) %>% na.omit
+
+accuracy <- accuracy(predictions, valid_data$base)
+accuracy
+```
+
+```{r}
+
+# Add predictions on all 2023 data
+season_preds <- as.vector(predict(model, newdata = hip_data))
+
+full_data <- cbind.data.frame(hip_data$player_name, season_preds,
+                              hip_data$base) %>% na.omit %>%
+  rename(name = `hip_data$player_name`,
+         predicted = season_preds,
+         actual = `hip_data$base`) %>%
+  mutate(diff = actual - predicted)
+
+head(full_data)
+```
+
+```{r}
+# Group by player and calculate sum and mean
+extra_bases <- full_data %>%
+  group_by(name) %>%
+  summarize(total = sum(diff),
+            mean = mean(diff)) %>%
+  arrange(by = desc(total))
+
+head(extra_bases, 15) %>% arrange(by = desc(total))
+tail(extra_bases, 15) %>% arrange(by = total)
+```
+
+## Conclusion
+
+The tables above list the players who took the most and fewest "extra bases" out of the batters box in 2023. The leaders in this category can be understood as those who are the most aggressive out of the box, taking hustle doubles and pushing for triples when most do not. This is also a very reliable form of power production because it is more reflective of play style than present success. As the saying goes, "Speed never slumps." Likewise, good baserunning never slumps.
+
+### Most Extra Bases
+
+1. Jarren Duran (BOS)
+2. TJ Friedl (CIN)
+3. Corbin Carroll (ARI)
+4. Bobby Witt Jr. (KC)
+5. Ke'Bryan Hayes (PIT)
+6. Steven Kwan (CLE)
+7. Gunnar Henderson (BAL)
+8. Elly De La Cruz (CIN)
+9. Kevin Kiermaier (TOR)
+10. Shohei Ohtani (LAA)
+
+### Fewest Extra Bases
+
+1. Salvador Perez (KC)
+2. Luis Arraez (MIA)
+3. Martín Maldonado (HOU)
+4. Mitch Garver (TEX)
+5. Eugenio Suárez (SEA)
+
+
+
+
