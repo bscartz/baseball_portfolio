@@ -57,4 +57,11 @@ Question: Who are the five best starting pitchers in Major League Baseball right
 
 This project begins with a brief statistical analysis over the last two seasons to pick ten candidates. It then summarizes a video scouting evaluation to determine the final order. The statistical analysis highlights xwOBA-against, K%, and BB%. The scouting analysis steps away from the metrics; it grades pitches on a 20-80 scale and comments on approach, sequencing, and other qualitative factors. 
 
+### Mini Project 7: Extra Bases
+https://rpubs.com/bscartz/extra-bases
+
+Task: Identify the players who are the most aggressive and successful baserunners out of the batters box
+
+This project creates a generalized additive model (GAM) to estimate "expected bases" on every hit in play. This is similar to xSLG, but it does not factor in outs and home runs. This allows the model to focus on baserunning out of the batters box. The expected bases for each hit in play is compared to the hitter's actual game event (single, double, or triple). These results are summarized, and players are ranked based on most extra bases over the course of the season. 
+
 
