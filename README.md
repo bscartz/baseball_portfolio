@@ -1,13 +1,19 @@
 # baseball_portfolio Ben Scartz
 This is a collection of baseball projects with the objectives of learning, practicing, and demonstrating code. Several are meant to simulate ad hoc projects conducted by analysts. Each project is described below and corresponds to a file above. The links below the titles attach R Markdown html files which display executed code and visualizations. 
 
-## Project 1: ChatGPT for Scouting Report Analysis
+## Project 1A: ChatGPT for Scouting Report Analysis
 (see file above)
 
 Purpose: to summarize and discuss scouting reports in a simple, conversational manner.
 
 This program creates a customized version of ChatGPT to pull summative pieces of information from scouting reports. It tunes the chat bot using the scouting reports and other key pieces of information. It is not meant to provide in-depth analysis, but it is effective in guiding and streamlining the learning process. The contents of this document include a model for standard summarization, text-only analysis, and multilingual analysis.
 
+## Project 1B: ChatGPT for Box Scores
+(see file above)
+
+Purpose: to answer questions and provide summative information about recent games or series from around baseball.
+
+This program takes inputs of box scores and answers questions regarding noteworthy events from the games described. The box scores could be from around the MLB, minor leagues, or college baseball. It is not meant to provide in-depth analysis, but it can be an effective tool in keeping scouts, managers, and executives informed about the volume of games that they are unable to watch. The program takes an optional input of a pre-defined watchlist, which allows the user to request information about a particular selection of players. 
 
 ### Mini Project 1: Statcast
 https://rpubs.com/bscartz/statcast
