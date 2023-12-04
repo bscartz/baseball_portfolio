@@ -15,6 +15,13 @@ Purpose: to answer questions and provide summative information about recent game
 
 This program takes inputs of box scores and answers questions regarding noteworthy events from the games described. The box scores could be from around the MLB, minor leagues, or college baseball. It is not meant to provide in-depth analysis, but it can be an effective tool in keeping scouts, managers, and executives informed about the volume of games that they are unable to watch. The program takes an optional input of a pre-defined watchlist, which allows the user to request information about a particular selection of players. 
 
+## Project 2: 2024 Season Simulation + Roster Tool
+(see file above)
+
+Task: Create a program to simulate the 2024 season and playoffs. Also, create a program that allows users to edit rosters and observe changes to simulated results.
+
+This is an expansion on Mini Project 3 (below), submitted as a final project for Python class. The tool simulates the 2024 regular season and playoffs based on fWAR projections. It then creates a tool by which players can be added to rosters, allowing users to observe the changes in simulated results. This can be a useful tool in understanding the effects of various acquisitions and losses. Rather than observing the effects on a team individually, it allows the changes to manifest in the context of divisions and playoff structures.
+
 ### Mini Project 1: Statcast
 https://rpubs.com/bscartz/statcast
 
@@ -38,7 +45,7 @@ Woods Richardson: For a young prospect, these comparisons to big leaguers can be
 ### Mini Project 3: Python MLB Playoff Simulator
 (see file above)
 
-Task: Create a tool to simulate the outcome of the MLB playoffs.
+Task: Create a program to simulate the outcome of the MLB playoffs.
 
 This project creates a tool in Python to simulate the MLB playoffs. It first creates a program to simulate based on random selection for each game. Then, it weights the random selection based on regular season wins. 
 
