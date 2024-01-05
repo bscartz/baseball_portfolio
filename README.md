@@ -22,6 +22,15 @@ Task: Create a program to simulate the 2024 season and playoffs. Also, create a 
 
 This is an expansion on Mini Project 3 (below), submitted as a final project for Python class. The tool simulates the 2024 regular season and playoffs based on fWAR projections. It then creates a tool by which players can be added to rosters, allowing users to observe the changes in simulated results. This can be a useful tool in understanding the effects of various acquisitions and losses. Rather than observing the effects on a team individually, it allows the changes to manifest in the context of divisions and playoff structures.
 
+### Mini Project 1: Scouting Dashboard (Tableau and R)
+https://rpubs.com/bscartz/scouting-dashboard
+
+Tableau Public link: https://public.tableau.com/views/ScoutingDashboard_17044305568340/ScoutingDashboard?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link
+
+Task: Create an interactive dashboard to support pro scouting operations.
+
+I often discuss using analytics and coding to support the other aspects of baseball operations, including qualitative scouting. This project creates an interactive Tableau dashboard that includes helpful information that I like to have before I scout a pitcher. The linked Rpubs document includes the R code necessary to create the usable data from raw Statcast data. 
+
 ### Mini Project 1: Statcast
 https://rpubs.com/bscartz/statcast
 
