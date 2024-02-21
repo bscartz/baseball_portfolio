@@ -1,0 +1,151 @@
+-- 1. Write a query to retrieve the first name, last name, and primary position of all players who have scouting reports in the report_info table, along with their corresponding organization from the player_info table.
+
+SELECT      play.first_name, play.last_name, play.pos, play.organization
+FROM        report_info rep
+INNER JOIN  player_info play
+ON          rep.player_id = play.player_id;
+
+
+######################################################################
+
+
+-- 2. Select the scout, report date, and player's first name and last name for reports submitted after June 6, 2023 from the report_info table. Include only those players who are listed as pitchers in the player_info table.
+
+SELECT      rep.scout, rep.report_date, rep.first_name, rep.last_name
+FROM        report_info rep
+INNER JOIN  player_info play
+ON          rep.player_id = play.player_id
+WHERE       play.pos IS "rhp" OR play.pos IS "lhp";
+
+
+########################################################################
+
+
+-- 3. Find the average height of all players who have scouting reports submitted in the report_info table, considering both hitters and pitchers.
+
+SELECT      ROUND(AVG(play.height_in),1) AS avg_height
+FROM        player_info play
+INNER JOIN report_info rep ON play.player_id = rep.player_id; 
+
+
+#########################################################################
+
+
+-- 4. List all pitchers along with their fastball velocity (top and bottom) from the report_grades_pitcher table. 
+--    Display top and bottom in a single column. e.g. top - 93 and bottom - 91 should be displayed as "91-93"
+
+SELECT      play.first_name, play.last_name, 
+            CAST(sump.fastball_velo_bottom AS INT) || '-' || CAST(sump.fastball_velo_top AS INT) AS fastball_velocity
+FROM        player_info play
+INNER JOIN  report_summaries_pitcher sump
+ON          play.player_id = sump.player_id
+WHERE       (play.pos IS "rhp" OR play.pos IS "lhp") AND fastball_velo_top IS NOT NULL 
+            AND fastball_velo_bottom IS NOT NULL;
+
+
+##########################################################################
+
+
+-- 5. Retrieve the summary and tool summary for all pitchers from the report_summaries_pitcher table. Additionally, include the player's 
+--    first name and last name, and only include players who are listed as right-handed pitchers in the player_info table.
+
+SELECT  sump.first_name, sump.last_name, sump.summary, sump.tool_summary
+FROM    report_summaries_pitcher sump
+INNER JOIN  player_info play
+ON          sump.player_id = play.player_id
+WHERE       play.pos IS "rhp";
+
+
+############################################################################
+
+
+-- 6. Count the number of players in each organization from the player_info table. Exclude organizations with fewer than 3 players.
+
+SELECT    play.organization, COUNT(play.player_id) AS players
+FROM      player_info play
+WHERE     organization  IS NOT NULL
+GROUP BY  play.organization
+HAVING    players > 3
+ORDER BY  players desc;
+
+
+##############################################################################
+
+
+-- 7. Identify the players whose future hit value is greater than 60 and future power production is greater than 70
+--    from the report_grades_hitter table.
+
+SELECT  first_name, last_name,  hit_present, hit_future, power_production_present, power_production_future
+FROM    report_grades_hitter gradh
+WHERE   hit_future > 50 AND power_production_future > 50;
+
+
+###############################################################################
+
+
+-- 8. Find which organization (with at least 3 reports) has the highest average future value
+
+SELECT  organization, COUNT(player_id) AS players, ROUND(AVG(future_value),2) AS avg_future_value
+FROM (
+        SELECT    play.player_id, play.organization, 
+                  COALESCE(gradh.future_value,0) + COALESCE(gradp.future_value,0) AS future_value -- COALESCE converts NAs to 0
+        FROM      player_info play
+        LEFT JOIN report_grades_hitter gradh
+        ON        play.player_id = gradh.player_id
+        LEFT JOIN report_grades_pitcher gradp
+        ON        play.player_id = gradp.player_id
+)
+WHERE    organization IS NOT NULL
+GROUP BY organization
+HAVING   players >= 3
+ORDER BY avg_future_value desc;
+
+
+#################################################################################
+
+
+-- 9. Identify pitchers who have three or more 50+ future grade pitches. Provide names, future values, and summaries
+
+SELECT     gradp.first_name, gradp.last_name, gradp.future_value, sump.summary
+FROM       report_grades_pitcher gradp
+INNER JOIN report_summaries_pitcher sump
+ON         gradp.player_id = sump.player_id
+WHERE   (
+        (COALESCE(fastball_future, 0) >= 50) + -- each logical returns a true/false (1/0) which can be summed
+        (COALESCE(changeup_future, 0) >= 50) +
+        (COALESCE(slider_future, 0) >= 50) +
+        (COALESCE(curveball_future, 0) >= 50) +
+        (COALESCE(cutter_future, 0) >= 50) +
+        (COALESCE(sinker_future, 0) >= 50) +
+        (COALESCE(splitter_future, 0) >= 50) +
+        (COALESCE(sweeper_future, 0) >= 50) +
+        (COALESCE(knuckleball_future, 0) >= 50)
+    ) >= 3
+ORDER BY future_value desc;
+
+
+####################################################################################
+
+
+-- 10. List hitters by their similarity in size to Jake Gelof (6'1" 195)
+
+SELECT   play.player_id, play.first_name, play.last_name, height_in, weight_lb,
+         height_in - gelof_height AS height_diff,
+         weight_lb - gelof_weight AS weight_diff
+FROM     player_info play,
+         (SELECT AVG(height_in) AS gelof_height, -- subquery to get gelof height and weight
+                 AVG(weight_lb) AS gelof_weight
+          FROM   player_info
+          WHERE  first_name = 'Jake' AND last_name = 'Gelof') AS averages
+WHERE     height_in IS NOT NULL AND weight_lb IS NOT NULL
+          AND pos IS NOT 'lhp' AND pos IS NOT 'rhp'
+ORDER BY ABS(height_diff + weight_diff);
+
+
+
+
+
+
+
+
+
