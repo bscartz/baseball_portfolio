@@ -86,4 +86,7 @@ Task: Identify the players who are the most aggressive and successful baserunner
 
 This project creates a generalized additive model (GAM) to estimate "expected bases" on every hit in play. This is similar to xSLG, but it does not factor in outs and home runs. This allows the model to focus on baserunning out of the batters box. The expected bases for each hit in play is compared to the hitter's actual game event (single, double, or triple). These results are summarized, and players are ranked based on most extra bases over the course of the season. 
 
+### Mini Project 9: SQL Queries
+(see file above)
 
+This project simply demonstrates SQL querying of the scouting report database. Unfortunately, it does not display the resulting data tables, but each query successfully performs its required task.
