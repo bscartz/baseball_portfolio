@@ -1,4 +1,5 @@
--- 1. Write a query to retrieve the first name, last name, and primary position of all players who have scouting reports in the report_info table, along with their corresponding organization from the player_info table.
+-- 1. Write a query to retrieve the first name, last name, and primary position of all players who have scouting reports 
+--    in the report_info table, along with their corresponding organization from the player_info table.
 
 SELECT      play.first_name, play.last_name, play.pos, play.organization
 FROM        report_info rep
@@ -9,7 +10,8 @@ ON          rep.player_id = play.player_id;
 ######################################################################
 
 
--- 2. Select the scout, report date, and player's first name and last name for reports submitted after June 6, 2023 from the report_info table. Include only those players who are listed as pitchers in the player_info table.
+-- 2. Select the scout, report date, and player's first name and last name for reports submitted after June 6, 2023 
+--    from the report_info table. Include only those players who are listed as pitchers in the player_info table.
 
 SELECT      rep.scout, rep.report_date, rep.first_name, rep.last_name
 FROM        report_info rep
@@ -21,7 +23,8 @@ WHERE       play.pos IS "rhp" OR play.pos IS "lhp";
 ########################################################################
 
 
--- 3. Find the average height of all players who have scouting reports submitted in the report_info table, considering both hitters and pitchers.
+-- 3. Find the average height of all players who have scouting reports submitted in the report_info table, 
+--    considering both hitters and pitchers.
 
 SELECT      ROUND(AVG(play.height_in),1) AS avg_height
 FROM        player_info play
@@ -46,8 +49,9 @@ WHERE       (play.pos IS "rhp" OR play.pos IS "lhp") AND fastball_velo_top IS NO
 ##########################################################################
 
 
--- 5. Retrieve the summary and tool summary for all pitchers from the report_summaries_pitcher table. Additionally, include the player's 
---    first name and last name, and only include players who are listed as right-handed pitchers in the player_info table.
+-- 5. Retrieve the summary and tool summary for all pitchers from the report_summaries_pitcher table. Additionally, 
+--    include the player's first name and last name, and only include players who are listed as right-handed pitchers in 
+--    the player_info table.
 
 SELECT  sump.first_name, sump.last_name, sump.summary, sump.tool_summary
 FROM    report_summaries_pitcher sump
@@ -59,7 +63,8 @@ WHERE       play.pos IS "rhp";
 ############################################################################
 
 
--- 6. Count the number of players in each organization from the player_info table. Exclude organizations with fewer than 3 players.
+-- 6. Count the number of players in each organization from the player_info table. Exclude organizations with 
+--    fewer than 3 players.
 
 SELECT    play.organization, COUNT(play.player_id) AS players
 FROM      player_info play
@@ -88,7 +93,8 @@ WHERE   hit_future > 50 AND power_production_future > 50;
 SELECT  organization, COUNT(player_id) AS players, ROUND(AVG(future_value),2) AS avg_future_value
 FROM (
         SELECT    play.player_id, play.organization, 
-                  COALESCE(gradh.future_value,0) + COALESCE(gradp.future_value,0) AS future_value -- COALESCE converts NAs to 0
+                  COALESCE(gradh.future_value,0) + COALESCE(gradp.future_value,0) AS future_value 
+                               -- COALESCE converts NAs to 0
         FROM      player_info play
         LEFT JOIN report_grades_hitter gradh
         ON        play.player_id = gradh.player_id
