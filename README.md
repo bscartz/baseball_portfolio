@@ -90,3 +90,10 @@ This project creates a generalized additive model (GAM) to estimate "expected ba
 (see file above)
 
 This project simply demonstrates SQL querying of the scouting report database. Unfortunately, it does not display the resulting data tables, but each query successfully performs its required task.
+
+### Mini Project 10: ChatGPT for SQL Querying
+(see file above)
+
+Purpose: to write SQL queries for a specific database based on plain-text requests
+
+This program can be used by those without SQL training to query a database. Often, non-analysts rely on those with SQL training to access information. This program can eliminate the "middle man" and allow users to query a database using plain-text. The program essentially translates plain-text to SQL queries. Users can plug the output into a database.
