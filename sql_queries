@@ -1,3 +1,10 @@
+ SQL Querying Demo
+This document displays querying questions and answers. The questions were provided by ChatGPT, and the 
+answers are my own work. While the resulting data tables cannot be displayed here, all of these queries 
+ran successfully in SQLiteStudio, producing the desired results. 
+
+
+
 -- 1. Write a query to retrieve the first name, last name, and primary position of all players who have scouting reports 
 --    in the report_info table, along with their corresponding organization from the player_info table.
 
@@ -133,7 +140,7 @@ ORDER BY future_value desc;
 ####################################################################################
 
 
--- 10. List hitters by their similarity in size to Jake Gelof (6'1" 195)
+-- 10. List and arrange hitters by their similarity in size to Jake Gelof (6'1" 195)
 
 SELECT   play.player_id, play.first_name, play.last_name, height_in, weight_lb,
          height_in - gelof_height AS height_diff,
